@@ -22,7 +22,7 @@ function init() {
 }
 
 function setupEventListeners() {
-    textArea.addEventListener('input', handleTextChange);
+    //textArea.addEventListener('input', handleTextChange);
     refreshBtn.addEventListener('click', handleTextChange);
 
     // word iteration controls
@@ -40,16 +40,15 @@ function setupEventListeners() {
 let words = [[]];
 let paragraphIndex = 0;
 let wordIndex = 0;
+let rawText = "";
 
 function handleTextChange(){
-    const text = textArea.value.trim();
+    rawText = textArea.innerText;
 
-    const paragraphs = text.split(/\n+/);
+    const paragraphs = rawText.split(/\n{2,}/);
 
-    words = paragraphs.map(p => p
-      .trim()
-      .split(/\s+/)          // split words
-      .filter(Boolean)
+    words = paragraphs.map(p =>
+        p.split(/\s+/).filter(Boolean)
     );
 
     paragraphIndex = 0;
@@ -58,10 +57,48 @@ function handleTextChange(){
     updateReadingWord();
 }
 
+
 function updateReadingWord() {
     readingWords.textContent = words[paragraphIndex]?.[wordIndex] ?? '';
+
+    renderText();
 }
 
+function renderText() {
+    let pIndex = 0;
+    let wIndex = 0;
+
+    const html = rawText.replace(
+        /(\S+)|(\n{2,})|(\s+)/g,
+        (match, word, paragraphBreak, space) => {
+
+            // Paragraph break (2+ newlines)
+            if (paragraphBreak) {
+                pIndex++;
+                wIndex = 0;
+                return paragraphBreak.replace(/\n/g, '<br>');
+            }
+
+            // Word
+            if (word) {
+                const isActive =
+                    pIndex === paragraphIndex &&
+                    wIndex === wordIndex;
+
+                const span = `<span class="word${isActive ? ' active' : ''}">
+                                ${word}
+                              </span>`;
+                wIndex++;
+                return span;
+            }
+
+            // Spaces / single newlines
+            return space.replace(/\n/g, '<br>');
+        }
+    );
+
+    textArea.innerHTML = html;
+}
 
 // Word iteration
 function togglePlayPause(){

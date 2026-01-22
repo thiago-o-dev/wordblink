@@ -1,0 +1,7 @@
+.word.active {
+  background: yellow;
+}
+
+.word {
+    display: inline-block;
+}
