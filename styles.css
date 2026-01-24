@@ -5,3 +5,28 @@
 .word {
     display: inline-block;
 }
+
+.main-word{
+  font-size: 70px;
+}
+
+.disabled-div {
+    background-color: #e9ecef;   /* same as Bootstrap disabled textarea */
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 1;                  /* prevent Bootstrap fade */
+}
+
+.disabled-div:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+body{
+  background-color: #3a3a3d;
+  color: #e9ecef;
+}
+
+.text-area{
+  background-color: #96989b;
+}
